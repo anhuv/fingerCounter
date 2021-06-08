@@ -4,23 +4,23 @@ import time
 
 class handDetector():
     def __init__(self,mode=False,maxHands=2,detectionCon=0.5,trackCon=0.65):
-        self.mode = mode
-        self.maxHands=maxHands
-        self.detectionCon=detectionCon
-        self.trackCon=trackCon
-        self.mpHands=mp.solutions.hands
-        self.hands=self.mpHands.Hands(self.mode,
+        self.mode = mode #chọn chế độ làm việc ,nếu chọn true thì đầu vào là ảnh, false là video
+        self.maxHands=maxHands #số bàn tay cùng lúc nhận diện
+        self.detectionCon=detectionCon # lấy kết quả detect tỉ lệ lớn hơn detectionCon 
+        self.trackCon=trackCon # lấy kết quả tracking tỉ lệ lớn hơn trackCon 
+        self.mpHands=mp.solutions.hands # khai báo thư viện
+        self.hands=self.mpHands.Hands(self.mode, 
         self.maxHands,
         self.detectionCon,
-        self.trackCon)
+        self.trackCon) 
 
-        self.mpDraw=mp.solutions.drawing_utils
+        self.mpDraw=mp.solutions.drawing_utils # khai báo phần drawing_utils trong thư viện mediapipe, đây là công cụ vẽ
 
-    def findHands(self,img,draw=True):
+    def findHands(self,img,draw=True): #draw = true thi vẽ
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
         # 21 points
-        if self.results.multi_hand_landmarks:
+        if self.results.multi_hand_landmarks:  # kiem tra xem có thu được kết quả không
             for handLms in self.results.multi_hand_landmarks:
                 if draw:
                     self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
@@ -35,7 +35,7 @@ class handDetector():
             for id, lm in enumerate(myHand.landmark):
                     # print(id,lm)
                 h, w, c = img.shape
-                cx, cy = int(lm.x * w), int(lm.y * h)
+                cx, cy = int(lm.x * w), int(lm.y * h) #toa do x và y là toa do cac diem trong ban tay
                 #print(id, cx, cy)
                 lmList.append([id,cx,cy])
                 if draw:
@@ -43,9 +43,9 @@ class handDetector():
 
 
 
-        return lmList
+        return lmList # tra ve danh sach toa dộ
 
-def main():
+def main(): 
     pTime = 0
     cTime = 0
     cap = cv2.VideoCapture(0)
